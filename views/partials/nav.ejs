@@ -1,0 +1,73 @@
+<% if (typeof error !== "undefined" && error) { %>
+
+<div class="alert alert-danger text-center mb-0 rounded-0" role="alert">
+    <strong><%= error %></strong>
+</div>
+
+<% } else { %>
+
+<nav class="navbar navbar-dark bg-dark px-4">
+    <a class="navbar-brand fw-bold" href="#">Bloggg</a>
+
+```
+<ul class="nav align-items-center">
+    <li class="nav-item">
+        <a class="nav-link text-white" href="/">Home</a>
+    </li>
+
+    <% if (locals.user) { %>
+     <li class="nav-item">
+        <a class="nav-link text-white" href="/blog/add">Add a Blog</a>
+    </li>
+    <li class="nav-item dropdown">
+        <a
+            class="nav-link dropdown-toggle text-white"
+            href="#"
+            id="userDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+        >
+            <%= locals.user.fullName %>
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="/profile">Profile</a></li>
+            <li><a class="dropdown-item" href="/myblogs">My Blogs</a></li>
+
+            <li><hr class="dropdown-divider"></li>
+
+            <li>
+                <a class="dropdown-item text-danger" href="/user/logout">
+                    Logout
+                </a>
+            </li>
+        </ul>
+    </li>
+    <% }  else{ %>
+        <li class="nav-item">
+        <a class="nav-link text-white" href="/user/signup">Create Account</a>
+       </li>
+       <li class="nav-item">
+        <a class="nav-link text-white" href="/user/signin">Signin</a>
+       </li>
+     <% }%>
+
+    
+</ul>
+
+<form class="d-flex ms-auto">
+    <input
+        class="form-control me-2"
+        type="search"
+        placeholder="Search..."
+    />
+    <button class="btn btn-outline-success" type="submit">
+        Search
+    </button>
+</form>
+```
+
+</nav>
+
+<% } %>
