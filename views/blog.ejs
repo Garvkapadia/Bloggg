@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("./partials/head") %>
+    <title>Blog</title>
+</head>
+<body>
+<%- include("./partials/nav") %>
+  <div class="container mt-2">
+        <h1 id="welcomeHeading" style="color: rgb(2, 187, 249); margin-top: 1rem;"></h1>
+        <h3><%= blog.title %></h3>
+        <img src="<%= blog.coverImage %>" alt="blog Image" width="400rem">
+        <p><%= blog.content %></p>
+        <div>
+          <img src="<%= blog.createdBy.profileImageURL %>" width="50rem" alt="User profile image"><%= blog.createdBy.fullName %>
+        </div>
+    </div>
+    
+    <%- include("./partials/scripts") %>
+
+    <script>
+        const text = "Welcome, <%= user.fullName %>";
+        const heading = document.getElementById("welcomeHeading");
+
+        let index = 0;
+
+        function typeWriter() {
+            if (index < text.length) {
+                heading.textContent += text.charAt(index);
+                index++;
+                setTimeout(typeWriter, 65); // Speed (milliseconds)
+            }
+        }
+
+        window.onload = typeWriter;
+    </script>
+
+    <!-- Comment Form -->
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h4 class="mb-3">Leave a Comment</h4>
+
+        <form action="/blog/comment/<%= blog._id %>" method="POST">
+
+            <div class="mb-3">
+                <label for="content" class="form-label">Comment</label>
+
+                <textarea
+                    class="form-control"
+                    id="content"
+                    name="content"
+                    rows="4"
+                    placeholder="Write your comment here..."
+                    required
+                ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+             Add
+            </button>
+
+        </form>
+
+    </div>
+</div>
+</body>
+</html>

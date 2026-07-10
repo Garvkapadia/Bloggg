@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("./partials/head")%>
+    <title>Add new blog</title>
+</head>
+<body>
+    <%- include("./partials/nav") %>
+    <div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <h3 class="mb-0">Create New Blog</h3>
+                </div>
+
+                <div class="card-body">
+
+                    <form action="/blog" method="POST" enctype="multipart/form-data">
+
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="title"
+                                name="title"
+                                placeholder="Enter blog title"
+                                required
+                            >
+                        </div>
+
+                        <!-- Content -->
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Content</label>
+                            <textarea
+                                class="form-control"
+                                id="content"
+                                name="content"
+                                rows="8"
+                                placeholder="Write your blog here..."
+                                required
+                            ></textarea>
+                        </div>
+
+                        <!-- Cover Image -->
+                        <div class="mb-4">
+                            <label for="coverImage" class="form-label">Cover Image</label>
+                            <input
+                                class="form-control"
+                                type="file"
+                                id="coverImage"
+                                name="coverImage"
+                                accept="image/*"
+                                required
+                            >
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-dark btn-lg">
+                                Publish Blog
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+        <%- include("./partials/scripts") %>
+</body>
+</html>
