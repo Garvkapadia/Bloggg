@@ -5,7 +5,7 @@ const userSchema=new mongoose.Schema({
     fullName:{
         type:String,
         required:true,
-        unique:true
+        
     },
     email:{
         type:String,
@@ -28,7 +28,13 @@ const userSchema=new mongoose.Schema({
         type:String,
         enum:["USER","ADMIN"],
         default:"USER"
-    }
+    },
+    savedBlogs:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"blogs"
+        }
+    ]
 },{timestamps:true});
 
 userSchema.pre("save",async function(){

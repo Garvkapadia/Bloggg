@@ -1,38 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <%- include("./partials/head") %>
     <title>Blog</title>
 </head>
 <body>
 <%- include("./partials/nav") %>
+<h1 id="welcomeHeading" style="color: rgb(2, 187, 249); margin-top: 1rem;"></h1>
   <div class="container mt-2">
-        <h1 id="welcomeHeading" style="color: rgb(2, 187, 249); margin-top: 1rem;"></h1>
-        <h3><%= blog.title %></h3>
+        
+        <div class="d-flex  align-items-center">
+          <h3 class="mb-0"><%= blog.title %></h3>
+
+          <form
+            action="/blog/likes/<%= blog._id %>"
+            method="POST"
+            style="display:inline;">
+
+            <button class="btn ms-5 p-0 border-0 bg-transparent">
+
+                    <% if (alreadyLiked) { %>
+
+                        <i class="bi bi-heart-fill text-danger fs-5"></i>
+
+                    <% } else { %>
+
+                        <i class="bi bi-heart fs-5"></i>
+
+                    <% } %>
+
+                    <%=blog.likes.length %>
+
+                </button>
+
+</form>
+
+          <form action="/blog/save/<%= blog._id %>" method="POST" style="display:inline;">
+            <button class="btn ms-2 p-0 border-0 bg-transparent">
+              <% if (alreadySaved) { %>
+                <i class="bi bi-bookmark-fill text-warning fs-5"></i>
+              <% } else { %>
+                <i class="bi bi-bookmark fs-5"></i>
+              <% } %>
+              Save
+            </button>
+          </form>
+     </div>
         <img src="<%= blog.coverImage %>" alt="blog Image" width="400rem">
         <p><%= blog.content %></p>
         <div>
           <img src="<%= blog.createdBy.profileImageURL %>" width="50rem" alt="User profile image"><%= blog.createdBy.fullName %>
+          <% if (user && blog.createdBy._id.toString() === user._id.toString()) { %>
+           <a href="/blog/edit/<%= blog._id %>" class="btn btn-warning mt-0 ms-3">
+        Edit Blog
+            </a>
+<% } %>
         </div>
+    </div>
+    <div class="container mt-3">
+      <h3>Comments <%= comments.length %></h3>
+      <% comments.forEach(comment => { %>
+       <img src="<%= comment.createdBy.profileImageURL %>" alt="profileImage" width="50rem">
+       <%= comment.createdBy.fullName %>
+       <pre><%= comment.content %></pre>
+      <% }) %>
     </div>
     
     <%- include("./partials/scripts") %>
 
     <script>
-        const text = "Welcome, <%= user.fullName %>";
         const heading = document.getElementById("welcomeHeading");
+        const userName = "<%= user ? user.fullName : '' %>";
 
-        let index = 0;
+        if (heading && userName) {
+            const text = `Welcome, ${userName}`;
+            let index = 0;
 
-        function typeWriter() {
-            if (index < text.length) {
-                heading.textContent += text.charAt(index);
-                index++;
-                setTimeout(typeWriter, 65); // Speed (milliseconds)
+            function typeWriter() {
+                if (index < text.length) {
+                    heading.textContent += text.charAt(index);
+                    index++;
+                    setTimeout(typeWriter, 65);
+                }
             }
-        }
 
-        window.onload = typeWriter;
+            window.onload = typeWriter;
+        }
     </script>
 
     <!-- Comment Form -->

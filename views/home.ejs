@@ -7,7 +7,31 @@
 <body>
         <%- include("./partials/nav") %>
         <div class="container mt-5">
+            <% if (!search) { %>
+               <div class="container text-center mt-5">
 
+    <h1 class="display-3 fw-bold">
+        Welcome to Bloggg
+    </h1>
+
+    <p class="lead text-muted">
+        Search and discover blogs from creators.
+    </p>
+
+    <img
+        src="/images/hero.png"
+        class="img-fluid mt-4"
+        style="max-width:500px;">
+
+</div>
+            <% } 
+ else if (blogs.length === 0) { %>
+
+        <div class="alert alert-warning text-center">
+            No blogs found.
+        </div>
+
+    <% } else{ %>
         <div class="row">
             <% blogs.forEach(blog => { %>
 
@@ -50,6 +74,8 @@
 
             <% }) %>
         </div>
+   <% }%>
+        
 
     </div>
         <%- include("./partials/scripts") %>

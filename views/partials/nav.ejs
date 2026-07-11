@@ -33,7 +33,7 @@
 
         <ul class="dropdown-menu dropdown-menu-dark">
             <li><a class="dropdown-item" href="/profile">Profile</a></li>
-            <li><a class="dropdown-item" href="/myblogs">My Blogs</a></li>
+            <li><a class="dropdown-item" href="/blog/myBlogs">My Blogs</a></li>
 
             <li><hr class="dropdown-divider"></li>
 
@@ -56,12 +56,15 @@
     
 </ul>
 
-<form class="d-flex ms-auto">
+<form class="d-flex" action="/" method="GET">
     <input
         class="form-control me-2"
         type="search"
-        placeholder="Search..."
-    />
+        name="search"
+        placeholder="Search blogs..."
+        value="<%= search || '' %>"
+    >
+
     <button class="btn btn-outline-success" type="submit">
         Search
     </button>

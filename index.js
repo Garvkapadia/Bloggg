@@ -24,11 +24,33 @@ app.use(checkforAuthenticationCookie("token"))
 app.use(express.static("./public"));
 
 app.get("/",async(req,res)=>{
+    let blogs=[];
+    const search = req.query.search || "";
     const allBlogs=await Blog.find({}).sort({createdAt:-1});
     console.log(allBlogs);
+    if(search){
+        const blogs =await Blog.find({
+    $or: [
+        {
+            title: {
+                $regex: search,
+                $options: "i"
+            }
+        },
+        {
+            content: {
+                $regex: search,
+                $options: "i"
+            }
+        }
+    ]
+}).sort({ createdAt: -1 });
+    }
+    
     res.render("home",{
         user:req.user,
-        blogs:allBlogs
+        blogs:allBlogs,
+        search,
     }
     );
 })
@@ -39,6 +61,14 @@ app.use("/user",userRoute);
 
 app.use("/blog",blogRoute);
 
+app.get("/profile", async (req,res)=>{
+    if(!req.user) return res.redirect("/");
+    const userProfile = await User.findById(req.user._id).populate("savedBlogs");
+    return res.render("profile",{
+        user:req.user,
+        savedBlogs: userProfile?.savedBlogs || []
+    });
+})
 
 app.listen(PORT,()=>{
     console.log(`Server started running at PORT:${PORT}`);

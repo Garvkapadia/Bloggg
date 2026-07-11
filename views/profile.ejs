@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("./partials/head") %>
+    <title>Profile</title>
+</head>
+<body class="bg-light">
+    <%- include("./partials/nav") %>
+
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+        <div class="card shadow p-4" style="width: 400px;">
+            <div class="text-center mb-3">
+                <img src="<%= user.profileImageURL %>" class="rounded-circle" width="100" height="100" alt="Profile">
+            </div>
+            <h4 class="text-center"><%= user.fullName %></h4>
+            <p class="text-center text-muted"><%= user.email %></p>
+            <p class="text-center"><span class="badge bg-secondary"><%= user.role %></span></p>
+
+            <h5 class="mt-4">Saved blogs</h5>
+            <% if (savedBlogs && savedBlogs.length > 0) { %>
+                <ul class="list-group mt-2">
+                    <% savedBlogs.forEach(savedBlog => { %>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a href="/blog/<%= savedBlog._id %>" class="text-decoration-none"><%= savedBlog.title %></a>
+                            <span class="badge bg-info text-dark">Saved</span>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p class="text-muted text-center mt-2">No saved blogs yet.</p>
+            <% } %>
+        </div>
+    </div>
+
+    <%- include("./partials/scripts") %>
+</body>
+</html>
