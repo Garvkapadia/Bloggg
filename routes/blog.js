@@ -1,3 +1,4 @@
+const fs=require("fs");
 const express=require("express");
 const router=express.Router();
 const Blog =require("../models/blog.js");
@@ -5,6 +6,7 @@ const Comment =require("../models/comment.js");
 const User =require("../models/user.js");
 const multer=require("multer");
 const path=require("path");
+const cloudinary=require("../services/cloudinary.js");
 const storage=multer.diskStorage({
     destination:function(req,file,cb){
        return cb(null,path.resolve("./public/uploads"));
@@ -30,16 +32,44 @@ router.get("/add-new",(req,res)=>{
 router.post("/",upload.single("coverImage"),async (req,res)=>{
     console.log(req.body);
     console.log(req.file);
+    console.log("user is:",req.user)
+    if(!req.user) return res.redirect("/signin");
+    if(!req.file){
+        return res.status(400).render("addBlog",{
+            user:req.user,
+            error:"Please select a cover image",
+        });
+    }
 
-    const {title,content}=req.body;
+   try {
+    console.log(cloudinary)
+    console.log(process.env.CLOUDINARY_CLOUD_NAME);
+console.log(process.env.CLOUDINARY_API_KEY);
+console.log(process.env.CLOUDINARY_API_SECRET);
+     const {title,content}=req.body;
+
+    const result= await cloudinary.uploader.upload(req.file.path,{
+        folder:"Blog-images"
+    });
+    console.log(result);
    const blog=await Blog.create({
         title,
         content,
         createdBy:req.user._id,
-        coverImage:`/uploads/${req.file.filename}`
+        coverImage:result.secure_url,
     })
     console.log(blog);
+    console.log("File uploaded successfully");
+    fs.unlinkSync(req.file.path);
     return res.redirect(`/blog/${blog._id}`);
+   } catch (error) {
+        console.log("Error:",error);
+        if(req.file) fs.unlinkSync(req.file.path);
+        return res.status(500).render("addBlog",{
+            user:req.user,
+            error:"Upload failed"
+        });
+   }
 })
 
 // see myBlogs
@@ -88,7 +118,15 @@ router.post(
         blog.title = req.body.title;
         blog.content = req.body.content;
          if (req.file) {
-            blog.coverImage = `/uploads/${req.file.filename}`;
+            const result=await cloudinary.uploader.upload(req.file.path,{
+                folder:"Blog-images"
+            });
+
+            blog.coverImage = result.secure_url;
+            
+            if(fs.existsSync(req.file.path)){
+                fs.unlinkSync(req.file.path);
+            }
         }
         await blog.save();
         return res.redirect(`/blog/${blog._id}`);

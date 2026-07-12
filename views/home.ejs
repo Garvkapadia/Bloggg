@@ -3,81 +3,387 @@
 <head>
     <%- include("./partials/head") %>
     <title>Homepage</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+            --ink:#14161F;
+            --ink-soft:#1D202C;
+            --paper:#F6F3EC;
+            --amber:#E7A33E;
+            --teal:#3D7A72;
+            --slate:#8B909B;
+            --hairline:rgba(246,243,236,0.14);
+        }
+
+        .bloggg-hero{
+            position:relative;
+            min-height:100vh;
+            background:var(--ink);
+            color:var(--paper);
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            overflow:hidden;
+        }
+
+        .bloggg-hero::before{
+            content:"";
+            position:absolute;
+            inset:0;
+            background:
+                radial-gradient(ellipse 60% 50% at 80% 15%, rgba(231,163,62,0.16), transparent),
+                radial-gradient(ellipse 50% 40% at 10% 85%, rgba(61,122,114,0.18), transparent);
+            pointer-events:none;
+        }
+
+        .bloggg-hero-inner{
+            position:relative;
+            max-width:900px;
+            margin:0 auto;
+            padding:0 1.5rem;
+            text-align:center;
+        }
+
+        .bloggg-eyebrow{
+            font-family:'IBM Plex Mono', monospace;
+            font-size:0.72rem;
+            letter-spacing:0.22em;
+            text-transform:uppercase;
+            color:var(--amber);
+            display:inline-flex;
+            align-items:center;
+            gap:0.6rem;
+            margin-bottom:1.75rem;
+        }
+
+        .bloggg-eyebrow::before,
+        .bloggg-eyebrow::after{
+            content:"";
+            width:28px;
+            height:1px;
+            background:var(--amber);
+            opacity:0.6;
+        }
+
+        .bloggg-headline{
+            font-family:'Fraunces', serif;
+            font-weight:500;
+            font-optical-sizing:auto;
+            font-size:clamp(2.75rem, 7vw, 5.5rem);
+            line-height:1.02;
+            letter-spacing:-0.02em;
+            margin:0 0 1.5rem;
+            padding-bottom: 1rem;
+            background: linear-gradient(90deg, #4facfe, #8e44ad);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bloggg-headline em{
+            font-style:italic;
+            color:var(--amber);
+            padding-right: 1rem;
+            
+        }
+
+        .bloggg-lead{
+            font-family:'Inter', sans-serif;
+            font-size:clamp(1.05rem, 1.6vw, 1.3rem);
+            color:var(--slate);
+            max-width:520px;
+            margin:0 auto 2.75rem;
+            line-height:1.6;
+        }
+
+        .bloggg-search-form{
+            max-width:480px;
+            margin:0 auto;
+            display:flex;
+            gap:0.5rem;
+            background:var(--ink-soft);
+            border:1px solid var(--hairline);
+            border-radius:100px;
+            padding:0.4rem 0.4rem 0.4rem 1.5rem;
+        }
+
+        .bloggg-search-form input{
+            flex:1;
+            background:transparent;
+            border:none;
+            color:var(--paper);
+            font-family:'Inter', sans-serif;
+            font-size:0.95rem;
+            outline:none;
+        }
+
+        .bloggg-search-form input::placeholder{
+            color:var(--slate);
+        }
+
+        .bloggg-search-form button{
+            background:var(--amber);
+            color:var(--ink);
+            border:none;
+            border-radius:100px;
+            padding:0.65rem 1.5rem;
+            font-family:'Inter', sans-serif;
+            font-weight:600;
+            font-size:0.9rem;
+            white-space:nowrap;
+            transition:transform 0.15s ease, background 0.15s ease;
+        }
+
+        .bloggg-search-form button:hover{
+            background:#f0b45f;
+            transform:translateY(-1px);
+        }
+
+        /* signature element: live ticker of actual post titles */
+        .bloggg-ticker-wrap{
+            position:absolute;
+            bottom:0;
+            left:0;
+            right:0;
+            border-top:1px solid var(--hairline);
+            background:rgba(20,22,31,0.6);
+            backdrop-filter:blur(4px);
+            padding:0.9rem 0;
+            overflow:hidden;
+            white-space:nowrap;
+        }
+
+        .bloggg-ticker-track{
+            display:inline-flex;
+            align-items:center;
+            animation:bloggg-scroll 10s linear infinite;
+        }
+
+        
+
+        
+
+        @keyframes bloggg-scroll{
+            from{ transform:translateX(0%); }
+            to{ transform:translateX(200%); }
+        }
+
+        @media (prefers-reduced-motion: reduce){
+            .bloggg-ticker-track{ animation:none; }
+        }
+
+        .bloggg-scroll-cue{
+            position:absolute;
+            bottom:4.5rem;
+            left:50%;
+            transform:translateX(-50%);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:0.4rem;
+            color:var(--slate);
+            text-decoration:none;
+            font-family:'IBM Plex Mono', monospace;
+            font-size:0.68rem;
+            letter-spacing:0.15em;
+            text-transform:uppercase;
+            opacity:0.8;
+            transition:opacity 0.15s ease;
+        }
+
+        .bloggg-scroll-cue:hover{
+            color:var(--paper);
+            opacity:1;
+        }
+
+        .bloggg-scroll-cue svg{
+            animation:bloggg-bounce 1.8s ease-in-out infinite;
+        }
+
+        @keyframes bloggg-bounce{
+            0%,100%{ transform:translateY(0); }
+            50%{ transform:translateY(6px); }
+        }
+
+        /* ---- blog listing section ---- */
+        .bloggg-blogs-section{
+            background:var(--paper);
+            padding:4.5rem 0 5rem;
+        }
+
+        .bloggg-section-heading{
+            max-width:1140px;
+            margin:0 auto 2.5rem;
+            padding:0 1rem;
+            display:flex;
+            align-items:baseline;
+            justify-content:space-between;
+            gap:1rem;
+            flex-wrap:wrap;
+        }
+
+        .bloggg-section-heading h2{
+            font-family:'Fraunces', serif;
+            font-weight:500;
+            font-size:1.9rem;
+            color:var(--ink);
+            margin:0;
+        }
+
+        .bloggg-section-heading span{
+            font-family:'IBM Plex Mono', monospace;
+            font-size:0.75rem;
+            letter-spacing:0.1em;
+            text-transform:uppercase;
+            color:var(--teal);
+        }
+
+        .bloggg-blogs-section .card{
+            border:1px solid rgba(20,22,31,0.08);
+            border-radius:14px;
+            overflow:hidden;
+            transition:transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .bloggg-blogs-section .card:hover{
+            transform:translateY(-4px);
+            box-shadow:0 16px 32px rgba(20,22,31,0.1);
+        }
+
+        .bloggg-blogs-section .card-title{
+            font-family:'Fraunces', serif;
+            font-weight:500;
+        }
+
+        .bloggg-blogs-section .btn-primary{
+            background:var(--ink);
+            border-color:var(--ink);
+            border-radius:100px;
+            font-family:'Inter', sans-serif;
+            font-size:0.85rem;
+        }
+
+        .bloggg-blogs-section .btn-primary:hover{
+            background:var(--teal);
+            border-color:var(--teal);
+        }
+
+        .bloggg-blogs-section .alert-warning{
+            font-family:'Inter', sans-serif;
+            max-width:1140px;
+            margin:0 auto;
+        }
+    </style>
 </head>
 <body>
         <%- include("./partials/nav") %>
-        <div class="container mt-5">
-            <% if (!search) { %>
-               <div class="container text-center mt-5">
 
-    <h1 class="display-3 fw-bold">
-        Welcome to Bloggg
-    </h1>
+        <% if (!search) { %>
 
-    <p class="lead text-muted">
-        Search and discover blogs from creators.
-    </p>
+            <section class="bloggg-hero">
+                <div class="bloggg-hero-inner">
+                    <span class="bloggg-eyebrow">Blogify your thoughts</span>
 
-    <img
-        src="/images/hero.png"
-        class="img-fluid mt-4"
-        style="max-width:500px;">
+                    <h1 class="bloggg-headline">
+                        Welcome to <em>Bloggg</em>
+                    </h1>
 
-</div>
-            <% } 
- else if (blogs.length === 0) { %>
+                    <p class="bloggg-lead">
+                        Search and discover blogs from creators.
+                    </p>
 
-        <div class="alert alert-warning text-center">
-            No blogs found.
-        </div>
-
-    <% } else{ %>
-        <div class="row">
-            <% blogs.forEach(blog => { %>
-
-                <div class="col-md-6 col-lg-3 mb-4">
-                    <div class="card h-100 shadow">
-
-                        <!-- Cover Image -->
-                        <img
-                            src="<%= blog.coverImage %>"
-                            class="card-img-top"
-                            alt="Cover Image"
-                            style="height:250px; object-fit:cover; background-size: cover;"
-                        >
-
-                        <div class="card-body d-flex flex-column">
-
-                            <!-- Title -->
-                            <h4 class="card-title">
-                                <%= blog.title %>
-                            </h4>
-
-                            <!-- Content -->
-                            <p class="card-text">
-                                <%= blog.content.substring(0,120) %>...
-                            </p>
-
-                        </div>
-
-                        <div class="card-footer bg-white">
-
-                            <small class="text-muted">
-                                Posted on
-                                <%= new Date(blog.createdAt).toLocaleString() %>
-                            </small>
-                              <a  class="btn btn-primary" href="/blog/<%= blog._id  %>">View more</a>  
-                        </div>
-
-                    </div>
+                    <form class="bloggg-search-form" action="/" method="get">
+                        <input
+                            type="text"
+                            name="search"
+                            placeholder="Search blogs by title or topic..."
+                        />
+                        <button type="submit">Search</button>
+                    </form>
                 </div>
 
-            <% }) %>
-        </div>
-   <% }%>
-        
+                <% if (blogs && blogs.length > 0) { %>
+                <div class="bloggg-ticker-wrap">
+                    <div class="bloggg-ticker-track">
+                       <strong style="font-size: larger;"><em>Check the blogs from creators & Write your own Blog</em></strong>
+                    </div>
+                </div>
+                <% } %>
 
-    </div>
+                <a href="#blogs" class="bloggg-scroll-cue">
+                    <span>Scroll to read</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 2V14M8 14L3 9M8 14L13 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </section>
+
+        <% } %>
+
+        <section class="bloggg-blogs-section" id="blogs">
+            <div class="bloggg-section-heading">
+                <h2><%= search ? `Results for "${search}"` : "Latest from creators" %></h2>
+                <span><%= blogs.length %> post<%= blogs.length === 1 ? "" : "s" %></span>
+            </div>
+
+            <div class="container">
+                <% if (blogs.length === 0) { %>
+
+                    <div class="alert alert-warning text-center">
+                        No blogs found.
+                    </div>
+
+                <% } else{ %>
+                    <div class="row">
+                        <% blogs.forEach(blog => { %>
+
+                            <div class="col-md-6 col-lg-3 mb-4">
+                                <div class="card h-100 shadow">
+
+                                    <!-- Cover Image -->
+                                    <img
+                                        src="<%= blog.coverImage %>"
+                                        class="card-img-top"
+                                        alt="Cover Image"
+                                        style="height:250px; object-fit:cover; background-size: cover;"
+                                    >
+
+                                    <div class="card-body d-flex flex-column">
+
+                                        <!-- Title -->
+                                        <h4 class="card-title">
+                                            <%= blog.title %>
+                                        </h4>
+
+                                        <!-- Content -->
+                                        <p class="card-text">
+                                            <%= blog.content.substring(0,120) %>...
+                                        </p>
+
+                                    </div>
+
+                                    <div class="card-footer bg-white">
+
+                                        <small class="text-muted">
+                                            Posted on
+                                            <%= new Date(blog.createdAt).toLocaleString() %>
+                                        </small>
+                                          <a  class="btn btn-primary" href="/blog/<%= blog._id  %>">View more</a>  
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        <% }) %>
+                    </div>
+               <% }%>
+            </div>
+        </section>
+
         <%- include("./partials/scripts") %>
 
 </body>

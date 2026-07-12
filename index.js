@@ -22,6 +22,10 @@ app.use(express.urlencoded({extended:false}));
 app.use(cookieParser());
 app.use(checkforAuthenticationCookie("token"))
 app.use(express.static("./public"));
+app.use((req,res,next)=>{
+    res.locals.search="";
+    next();
+})
 
 app.get("/",async(req,res)=>{
     let blogs=[];
