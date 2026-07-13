@@ -15,7 +15,7 @@ const storage=multer.diskStorage({
         const fileName=`${Date.now()}-${file.originalname}`;
         return cb(null,fileName);
     }
-})
+});
 
 const upload=multer({storage:storage});
 
@@ -25,7 +25,7 @@ router.get("/add-new",(req,res)=>{
         user:req.user,
 
     });
-})
+});
 
 
 // post your blog
@@ -42,10 +42,8 @@ router.post("/",upload.single("coverImage"),async (req,res)=>{
     }
 
    try {
-    console.log(cloudinary)
-    console.log(process.env.CLOUDINARY_CLOUD_NAME);
-console.log(process.env.CLOUDINARY_API_KEY);
-console.log(process.env.CLOUDINARY_API_SECRET);
+
+    
      const {title,content}=req.body;
 
     const result= await cloudinary.uploader.upload(req.file.path,{
@@ -57,6 +55,7 @@ console.log(process.env.CLOUDINARY_API_SECRET);
         content,
         createdBy:req.user._id,
         coverImage:result.secure_url,
+        coverImageId:result.public_id,
     })
     console.log(blog);
     console.log("File uploaded successfully");
@@ -70,7 +69,11 @@ console.log(process.env.CLOUDINARY_API_SECRET);
             error:"Upload failed"
         });
    }
-})
+});
+
+
+//handle delete blog
+
 
 // see myBlogs
 router.get("/myBlogs",async (req,res)=>{
@@ -79,7 +82,7 @@ router.get("/myBlogs",async (req,res)=>{
         user:req.user,
         blogs:myBlog,
     });
-})
+});
 
 
 
@@ -99,8 +102,7 @@ router.get("/edit/:id",async(req,res)=>{
 
 
 //editing blog
-router.post(
-    "/edit/:id",
+router.post("/edit/:id",
     upload.single("coverImage"),
     async (req, res) => {
 
@@ -118,12 +120,17 @@ router.post(
         blog.title = req.body.title;
         blog.content = req.body.content;
          if (req.file) {
+           if(blog.coverImageId){
+             await cloudinary.uploader.destroy(blog.coverImageId);
+
+           }
+
             const result=await cloudinary.uploader.upload(req.file.path,{
                 folder:"Blog-images"
             });
 
             blog.coverImage = result.secure_url;
-            
+            blog.coverImageId=result.public_id;
             if(fs.existsSync(req.file.path)){
                 fs.unlinkSync(req.file.path);
             }
@@ -132,6 +139,42 @@ router.post(
         return res.redirect(`/blog/${blog._id}`);
     });
 
+
+
+
+router.post("/delete/:id",async(req,res)=>{
+    try {
+        const blog=await Blog.findById(req.params.id);
+        if(!blog){
+            return res.status(404).send(" Blog Not found");
+        }
+
+        if(blog.createdBy.toString()!==req.user._id.toString()){
+            return res.status(403).send("Unauthorized");
+        }
+
+        if(blog.coverImageId){
+            await cloudinary.uploader.destroy(blog.coverImageId);
+        }
+
+        //delete comments
+        await Comment.deleteMany({blogId:blog._id});
+
+        //delete from saved blogs
+        await User.updateMany({},{
+            $pull:{
+                savedBlogs:blog._id,
+            }
+        });
+
+        await Blog.findByIdAndDelete(blog._id);
+
+        return res.redirect("/blog/myBlogs");
+    } catch (error) {
+        console.log("Error occured while deleting",error);
+        return res.status(500).send("Internal Server Error");
+    }
+})
 //handle likes
 router.post("/likes/:id",async(req,res)=>{
     const blog=await Blog.findById(req.params.id);
@@ -150,32 +193,27 @@ router.post("/likes/:id",async(req,res)=>{
 
     await blog.save();
     return res.redirect(`/blog/${blog._id}`)
-})
+});
 
 // handle saved blogs
 router.post("/save/:id", async (req, res) => {
     if (!req.user) {
         return res.redirect("/signin");
     }
-
     const blog = await Blog.findById(req.params.id);
     if (!blog) {
         return res.status(404).send("Blog not found");
     }
-
     const userDoc = await User.findById(req.user._id);
     if (!userDoc) {
         return res.redirect("/signin");
     }
-
     const alreadySaved = userDoc.savedBlogs.some((savedBlogId) => savedBlogId.toString() === blog._id.toString());
-
     if (alreadySaved) {
         userDoc.savedBlogs.pull(blog._id);
     } else {
         userDoc.savedBlogs.push(blog._id);
     }
-
     await userDoc.save();
     return res.redirect(`/blog/${blog._id}`);
 });
@@ -209,5 +247,10 @@ router.post("/comment/:blogId",async(req,res)=>{
     });
     console.log(comment);
     return res.redirect(`/blog/${req.params.blogId}`)
-})
+});
+
+
+
+
+
 module.exports=router;

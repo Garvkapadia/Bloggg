@@ -23,7 +23,11 @@ const blogSchema=new mongoose.Schema({
             type:mongoose.Schema.Types.ObjectId,
             ref:"user"
         }
-    ]
+    ],
+    coverImageId:{
+        type:String,
+        required:true,
+    }
 },{timestamps:true});
 
 const Blog=mongoose.model("blogs",blogSchema);
