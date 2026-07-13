@@ -4,11 +4,11 @@
     <%- include("./partials/head") %>
     <title>Profile</title>
 </head>
-<body class="bg-light">
+<body class="bg-light" style="background: linear-gradient(orange,rgb(221, 6, 221));">
     <%- include("./partials/nav") %>
 
-    <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-        <div class="card shadow p-4" style="width: 400px;">
+    <div class="container d-flex justify-content-center align-items-center mt-3 mb-3" style="min-height: 80vh;">
+        <div class="card shadow p-4" style="width: 80vh;">
             <div class="text-center mb-3">
                 <img src="<%= user.profileImageURL %>" class="rounded-circle" width="100" height="100" alt="Profile">
             </div>

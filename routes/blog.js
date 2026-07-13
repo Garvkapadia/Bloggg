@@ -60,7 +60,7 @@ router.post("/",upload.single("coverImage"),async (req,res)=>{
     console.log(blog);
     console.log("File uploaded successfully");
     fs.unlinkSync(req.file.path);
-    return res.redirect(`/blog/${blog._id}`);
+    return res.redirect("/blog/myBlogs");
    } catch (error) {
         console.log("Error:",error);
         if(req.file) fs.unlinkSync(req.file.path);
@@ -72,7 +72,7 @@ router.post("/",upload.single("coverImage"),async (req,res)=>{
 });
 
 
-//handle delete blog
+
 
 
 // see myBlogs
@@ -141,7 +141,7 @@ router.post("/edit/:id",
 
 
 
-
+//handle delete blog
 router.post("/delete/:id",async(req,res)=>{
     try {
         const blog=await Blog.findById(req.params.id);
@@ -175,6 +175,9 @@ router.post("/delete/:id",async(req,res)=>{
         return res.status(500).send("Internal Server Error");
     }
 })
+
+
+
 //handle likes
 router.post("/likes/:id",async(req,res)=>{
     const blog=await Blog.findById(req.params.id);
@@ -194,6 +197,8 @@ router.post("/likes/:id",async(req,res)=>{
     await blog.save();
     return res.redirect(`/blog/${blog._id}`)
 });
+
+
 
 // handle saved blogs
 router.post("/save/:id", async (req, res) => {
@@ -218,8 +223,12 @@ router.post("/save/:id", async (req, res) => {
     return res.redirect(`/blog/${blog._id}`);
 });
 
+
 // finding blog
 router.get("/:id",async(req,res)=>{
+    if(!req.user){
+        return res.redirect("/user/signin");
+    }
     const blog=await Blog.findById(req.params.id).populate("createdBy");
     const comments=await Comment.find({blogId:req.params.id}).populate("createdBy");
     const userDoc =  await User.findById(req.user._id);
@@ -237,6 +246,9 @@ router.get("/:id",async(req,res)=>{
         alreadySaved,
     })
 });
+
+
+
 
 // posting comment
 router.post("/comment/:blogId",async(req,res)=>{

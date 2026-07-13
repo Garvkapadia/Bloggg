@@ -66,7 +66,7 @@ app.use("/user",userRoute);
 app.use("/blog",blogRoute);
 
 app.get("/profile", async (req,res)=>{
-    if(!req.user) return res.redirect("/");
+    if(!req.user) return res.redirect("/user/signin");
     const userProfile = await User.findById(req.user._id).populate("savedBlogs");
     return res.render("profile",{
         user:req.user,
