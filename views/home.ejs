@@ -173,7 +173,7 @@
 
         @keyframes bloggg-scroll{
             from{ transform:translateX(0%); }
-            to{ transform:translateX(200%); }
+            to{ transform:translateX(175%); }
         }
 
         @media (prefers-reduced-motion: reduce){
@@ -328,7 +328,7 @@
 
         <section class="bloggg-blogs-section" id="blogs">
             <div class="bloggg-section-heading">
-                <h2><%= search ? `Results for "${search}"` : "Latest from creators" %></h2>
+                <h2><%= search ? `Results for "${search}"` : "Latest from creators"  %></h2>
                 <span><%= blogs.length %> post<%= blogs.length === 1 ? "" : "s" %></span>
             </div>
 
@@ -349,9 +349,8 @@
                                     <!-- Cover Image -->
                                     <img
                                         src="<%= blog.coverImage %>"
-                                        class="card-img-top"
+                                        class="card-img-top blog-card-image"
                                         alt="Cover Image"
-                                        style="height:250px; object-fit:cover; background-size: cover;"
                                     >
 
                                     <div class="card-body d-flex flex-column">

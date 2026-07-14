@@ -1,3 +1,40 @@
+<style>
+    .custom-navbar{
+    background:#fff;
+    box-shadow:0 2px 12px rgba(0,0,0,.08);
+    padding:12px 20px;
+}
+
+.navbar-brand{
+    color:#111 !important;
+    letter-spacing:.5px;
+}
+
+.nav-link{
+    color:#222 !important;
+    font-weight:500;
+    margin:0 6px;
+    transition:.25s;
+}
+
+.nav-link:hover{
+    color:#0d6efd !important;
+}
+
+
+
+
+.btn{
+    border-radius:25px;
+}
+
+.dropdown-menu{
+    border-radius:12px;
+}
+</style>
+
+
+
 <% if (typeof error !== "undefined" && error) { %>
 
 <div class="alert alert-danger text-center mb-0 rounded-0" role="alert">
@@ -6,71 +43,81 @@
 
 <% } else { %>
 
-<nav class="navbar navbar-dark bg-dark px-4">
-    <a class="navbar-brand fw-bold" href="/">Bloggg</a>
+<nav class="navbar navbar-expand-lg custom-navbar px-4">
+    <div class="container-fluid">
 
-```
-<ul class="nav align-items-center">
-    <li class="nav-item">
-        <a class="nav-link text-white" href="/">Home</a>
-    </li>
-
-    <% if (locals.user) { %>
-     <li class="nav-item">
-        <a class="nav-link text-white" href="/blog/add-new">Add a Blog</a>
-    </li>
-    <li class="nav-item dropdown">
-        <a
-            class="nav-link dropdown-toggle text-white"
-            href="#"
-            id="userDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-        >
-            <%= locals.user.fullName %>
+        <a class="navbar-brand fw-bold fs-3" href="/">
+            Bloggg
         </a>
 
-        <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="/profile">Profile</a></li>
-            <li><a class="dropdown-item" href="/blog/myBlogs">My Blogs</a></li>
+        <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <li><hr class="dropdown-divider"></li>
+        <div class="collapse navbar-collapse" id="navbarNav">
 
-            <li>
-                <a class="dropdown-item text-danger" href="/user/logout">
-                    Logout
-                </a>
-            </li>
-        </ul>
-    </li>
-    <% }  else{ %>
-        <li class="nav-item">
-        <a class="nav-link text-white" href="/user/signup">Create Account</a>
-       </li>
-       <li class="nav-item">
-        <a class="nav-link text-white" href="/user/signin">Signin</a>
-       </li>
-     <% }%>
+            <ul class="navbar-nav ms-auto align-items-center " >
 
-    
-</ul>
+                <li class="nav-item">
+                    <a class="nav-link me-3" href="/">Home</a>
+                </li>
 
-<form class="d-flex" action="/" method="GET">
-    <input
-        class="form-control me-2"
-        type="search"
-        name="search"
-        placeholder="Search blogs..."
-        value="<%=  search || '' %>"
-    >
+                <% if (locals.user) { %>
 
-    <button class="btn btn-outline-success" type="submit">
-        Search
-    </button>
-</form>
-```
+                <li class="nav-item">
+                    <a class="nav-link me-3" href="/blog/add-new">
+                        Write Blog
+                    </a>
+                </li>
 
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-semibold"
+                        href="#"
+                        data-bs-toggle="dropdown">
+                        <%= locals.user.fullName %>
+                    </a>
+
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                        <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                        <li><a class="dropdown-item" href="/blog/myBlogs">My Blogs</a></li>
+
+                        <li><hr class="dropdown-divider"></li>
+
+                        <li>
+                            <a class="dropdown-item text-danger" href="/user/logout">
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <% } else { %>
+
+                <li class="nav-item">
+                    <a class="btn btn-outline-dark me-3" href="/user/signin">
+                        Sign In
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="btn btn-dark" href="/user/signup">
+                        Create Account
+                    </a>
+                </li>
+
+                <% } %>
+
+            </ul>
+
+            
+
+        </div>
+    </div>
 </nav>
 
+
+ 
 <% } %>
+ 

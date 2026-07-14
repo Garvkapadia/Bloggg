@@ -7,8 +7,9 @@
 <body class="bg-light">
     <%- include("./partials/nav") %>
 
-    <div class="container py-5">
-        <h2 class="mb-4">My Blogs</h2>
+    <div class="main" style="background: linear-gradient(rgb(51, 39, 51),#14161f);">
+        <div class="container py-5" >
+        <h1 class="mb-4 text-white">My Blogs</h1>
 
         <% if (blogs.length === 0) { %>
             <div class="text-center py-5">
@@ -20,7 +21,7 @@
                 <% blogs.forEach(blog => { %>
                     <div class="col-md-4">
                         <div class="card h-100">
-                            <img src="<%= blog.coverImage %>" class="card-img-top" alt="<%= blog.title %>">
+                            <img src="<%= blog.coverImage %>" class="card-img-top blog-card-image" alt="<%= blog.title %>">
                             <div class="card-body">
                          <h5 class="card-title"><%= blog.title %></h5>
                          <div class="d-flex gap-2 flex-wrap">
@@ -47,6 +48,7 @@
                 <% }) %>
             </div>
         <% } %>
+    </div>
     </div>
 
 

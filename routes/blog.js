@@ -193,7 +193,7 @@ router.post("/likes/:id",async(req,res)=>{
     else{
         blog.likes.push(req.user._id);
     }
-
+    console.log(blog.coverImageId);
     await blog.save();
     return res.redirect(`/blog/${blog._id}`)
 });
