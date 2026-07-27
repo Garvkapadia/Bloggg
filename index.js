@@ -5,7 +5,7 @@ const app=express();
 const cookieParser=require("cookie-parser");
 const Blog=require("./models/blog.js");
 const User=require("./models/user.js");
-const PORT=process.env.PORT;
+const PORT=process.env.PORT||8000;
 const {connectDB} =require("./connection.js");
 const userRoute=require("./routes/user");
 const blogRoute=require("./routes/blog.js");
@@ -31,7 +31,7 @@ app.get("/",async(req,res)=>{
     let blogs=[];
     const search = req.query.search || "";
     const allBlogs=await Blog.find({}).sort({createdAt:-1});
-    console.log(allBlogs);
+    
     if(search){
         const blogs =await Blog.find({
     $or: [
@@ -49,7 +49,7 @@ app.get("/",async(req,res)=>{
         }
     ]
 }).sort({ createdAt: -1 });
-    }
+    } 
     
     res.render("home",{
         user:req.user,
