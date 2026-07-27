@@ -30,9 +30,7 @@ router.get("/add-new",(req,res)=>{
 
 // post your blog
 router.post("/",upload.single("coverImage"),async (req,res)=>{
-    console.log(req.body);
-    console.log(req.file);
-    console.log("user is:",req.user)
+    
     if(!req.user) return res.redirect("/signin");
     if(!req.file){
         return res.status(400).render("addBlog",{
@@ -57,8 +55,7 @@ router.post("/",upload.single("coverImage"),async (req,res)=>{
         coverImage:result.secure_url,
         coverImageId:result.public_id,
     })
-    console.log(blog);
-    console.log("File uploaded successfully");
+    
     fs.unlinkSync(req.file.path);
     return res.redirect("/blog/myBlogs");
    } catch (error) {

@@ -19,7 +19,6 @@ router.post("/signin",async(req,res)=>{
    try{
      const {email,password}=req.body;
      const token= await user.matchPasswordAndGenerateToken(email,password)
-     //if(req.user) return res.redirect("/");
      return res.cookie("token",token).redirect("/");
    }catch(err){
         return res.status(401).render("signin", {
@@ -31,7 +30,7 @@ router.post("/signin",async(req,res)=>{
 
 //signup
 router.post("/signup",async(req,res)=>{
-    console.log(req.body);
+    
  const {fullName,email,password}=req.body;
  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -64,11 +63,8 @@ if (!fullName.trim()) {
     email,
     password
  });
- console.log(usercreation);
  const token = createTokenforUser(usercreation);
-
  return res.cookie("token", token).redirect("/");
- 
 })
 
 
