@@ -28,12 +28,12 @@ app.use((req,res,next)=>{
 })
 
 app.get("/",async(req,res)=>{
-    let blogs=[];
+    let blogs;
     const search = req.query.search || "";
     const allBlogs=await Blog.find({}).sort({createdAt:-1});
     
     if(search){
-        const blogs =await Blog.find({
+         blogs =await Blog.find({
     $or: [
         {
             title: {
@@ -49,11 +49,13 @@ app.get("/",async(req,res)=>{
         }
     ]
 }).sort({ createdAt: -1 });
-    } 
+    } else {
+        blogs = await Blog.find({}).sort({ createdAt: -1 });
+    }
     
     res.render("home",{
         user:req.user,
-        blogs:allBlogs,
+        blogs,
         search,
     }
     );
