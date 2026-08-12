@@ -12,6 +12,9 @@
         <h2 class="text-center mb-4">Sign In</h2>
 
             
+        <% if(error){ %>
+            <div class="alert alert-danger"><%= error %></div>
+        <% } %>
         <form action="/user/signin" method="POST">
 
             <!-- Email -->
@@ -44,6 +47,9 @@
             </button>
 
         </form>
+        <div class="text-center mt-3">
+            <a href="/user/forgot">Forgot password?</a>
+        </div>
     </div>
 </div>
 

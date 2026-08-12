@@ -1,11 +1,10 @@
-const {createHmac,randomBytes}=require("node:crypto");
+const {createHmac,randomBytes,createHash}=require("node:crypto");
 const mongoose=require("mongoose");
 const { createTokenforUser } = require("../services/authentication.js");
 const userSchema=new mongoose.Schema({
     fullName:{
         type:String,
         required:true,
-        
     },
     email:{
         type:String,
@@ -29,6 +28,12 @@ const userSchema=new mongoose.Schema({
         enum:["USER","ADMIN"],
         default:"USER"
     },
+    resetPasswordToken:{
+        type:String,
+    },
+    resetPasswordExpires:{
+        type:Date,
+    },
     savedBlogs:[
         {
             type:mongoose.Schema.Types.ObjectId,
@@ -48,9 +53,32 @@ userSchema.pre("save",async function(){
 
     this.salt=salt;
     this.password=hashedPassword;
-    
 })
 
+userSchema.methods.createPasswordResetToken=function(){
+    const resetToken=randomBytes(32).toString("hex");
+    const hashedToken=createHash("sha256").update(resetToken).digest("hex");
+
+    this.resetPasswordToken=hashedToken;
+    this.resetPasswordExpires=Date.now()+10*60*1000;
+    return resetToken;
+};
+
+userSchema.methods.resetPassword=async function(newPassword){
+    this.password=newPassword;
+    this.resetPasswordToken=undefined;
+    this.resetPasswordExpires=undefined;
+    await this.save();
+    return createTokenforUser(this);
+};
+
+userSchema.statics.findByPasswordResetToken=function(token){
+    const hashedToken=createHash("sha256").update(token).digest("hex");
+    return this.findOne({
+        resetPasswordToken:hashedToken,
+        resetPasswordExpires:{ $gt: Date.now() }
+    });
+};
 
 userSchema.static("matchPasswordAndGenerateToken",async function(email,password){
     const user= await this.findOne({email});

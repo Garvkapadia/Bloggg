@@ -11,7 +11,9 @@
             <h2 class="text-center mb-4">Register</h2>
 
             <form action="/user/signup" method="POST">
-
+                <% if(error){ %>
+                    <div class="alert alert-danger"><%= error %></div>
+                <% } %>
                 <!-- Full Name -->
                 <div class="mb-3">
                     <label for="fullName" class="form-label">Full Name</label>
